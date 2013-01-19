@@ -1,0 +1,305 @@
+# Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above copyright
+#       notice, this list of conditions and the following disclaimer in the
+#       documentation and/or other materials provided with the distribution.
+#     * Neither the name of Code Aurora nor
+#       the names of its contributors may be used to endorse or promote
+#       products derived from this software without specific prior written
+#       permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NON-INFRINGEMENT ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+# OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+
+on init
+    write /sys/class/android_usb/android0/f_rndis/wceis 1
+
+on property:sys.usb.config=autorun,mass_storage
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 12d1
+    write /sys/class/android_usb/android0/idProduct 1031
+    write /sys/class/android_usb/android0/iSerial cleanup
+    write /sys/class/android_usb/android0/f_mass_storage/nluns 1
+    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index 0
+    write /sys/class/android_usb/android0/f_mass_storage/lun0/file /system/cdrom/autorun.iso
+    write /sys/class/android_usb/android0/functions mass_storage
+    write /sys/class/android_usb/android0/enable 1
+    setprop sys.usb.state ${sys.usb.config} 
+
+on property:sys.usb.config=autorun,mass_storage,adb
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 12d1
+    write /sys/class/android_usb/android0/idProduct 1031
+    write /sys/class/android_usb/android0/iSerial cleanup
+    write /sys/class/android_usb/android0/f_mass_storage/nluns 1
+    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index 0
+    write /sys/class/android_usb/android0/f_mass_storage/lun0/file /system/cdrom/autorun.iso
+    write /sys/class/android_usb/android0/functions mass_storage
+    write /sys/class/android_usb/android0/enable 1
+    setprop sys.usb.state ${sys.usb.config} 
+# /* DTS2012021307208  chenxi 20120215 end > */
+
+# USB google mode configuration
+on property:sys.usb.config=mass_storage
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 12d1
+    write /sys/class/android_usb/android0/idProduct 1037
+    #/* < DTS2012060701547 fangxinyong 20120608 begin */
+    write /sys/class/android_usb/android0/f_mass_storage/nluns 3
+    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index 2
+    #/* DTS2012060701547 fangxinyong 20120608 end > */ 
+    write /sys/class/android_usb/android0/f_mass_storage/lun2/file /system/cdrom/autorun.iso
+    write /sys/class/android_usb/android0/functions ${sys.usb.config}
+    write /sys/class/android_usb/android0/enable 1
+    setprop sys.usb.state ${sys.usb.config} 
+
+on property:sys.usb.config=mass_storage,adb
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 12d1
+    write /sys/class/android_usb/android0/idProduct 1038
+    #/* < DTS2012060701547 fangxinyong 20120608 begin */
+    write /sys/class/android_usb/android0/f_mass_storage/nluns 3
+    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index 2
+    #/* DTS2012060701547 fangxinyong 20120608 end > */ 
+    write /sys/class/android_usb/android0/f_mass_storage/lun2/file /system/cdrom/autorun.iso
+    write /sys/class/android_usb/android0/functions ${sys.usb.config}
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+    setprop sys.usb.state ${sys.usb.config} 
+
+# /* cleanup usb serial number for normal and factory mode */
+# USB normal mode configuration
+# /* < DTS2012022706082 chenxi 20120302 begin */
+# /* add adb and diag port to make sure diag port is enabled */
+on property:sys.usb.config=serial,mass_storage
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 12d1
+    write /sys/class/android_usb/android0/idProduct 1035
+    write /sys/class/android_usb/android0/iSerial cleanup
+    write /sys/class/android_usb/android0/f_diag/clients  diag
+    # /* < DTS2012022301786 yanzhijun 20120223 begin */
+    # change the pcui port to smd type for support at command
+    write /sys/class/android_usb/android0/f_serial/transports smd,smd
+    # /* DTS2012022301786 yanzhijun 20120223 end > */ 
+    write /sys/class/android_usb/android0/f_mass_storage/nluns 1
+    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index 0
+    write /sys/class/android_usb/android0/f_mass_storage/lun0/file /system/cdrom/autorun.iso
+    write /sys/class/android_usb/android0/functions serial,mass_storage,adb,diag
+    write /sys/class/android_usb/android0/enable 1
+    setprop sys.usb.state ${sys.usb.config} 
+# /* DTS2012022706082 chenxi 20120302 end > */
+
+on property:sys.usb.config=serial,mass_storage,adb
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 12d1
+    write /sys/class/android_usb/android0/idProduct 1035
+    write /sys/class/android_usb/android0/iSerial cleanup
+    write /sys/class/android_usb/android0/f_diag/clients  diag
+    # /* < DTS2012022301786 yanzhijun 20120223 begin */
+    # change the pcui port to smd type for support at command
+    write /sys/class/android_usb/android0/f_serial/transports smd,smd
+    # /* DTS2012022301786 yanzhijun 20120223 end > */ 
+    write /sys/class/android_usb/android0/f_mass_storage/nluns 1
+    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index 0
+    write /sys/class/android_usb/android0/f_mass_storage/lun0/file /system/cdrom/autorun.iso
+    write /sys/class/android_usb/android0/functions serial,mass_storage,adb,diag
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+    setprop sys.usb.state ${sys.usb.config} 
+
+# USB tethering mode configuration
+on property:sys.usb.config=rndis
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 12d1
+    write /sys/class/android_usb/android0/idProduct 1039
+    write /sys/class/android_usb/android0/f_rndis/wceis 1
+    write /sys/class/android_usb/android0/functions ${sys.usb.config}
+    write /sys/class/android_usb/android0/enable 1
+    setprop sys.usb.state ${sys.usb.config} 
+
+on property:sys.usb.config=rndis,adb
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 12d1
+    write /sys/class/android_usb/android0/idProduct 1050
+    write /sys/class/android_usb/android0/f_rndis/wceis 1
+    write /sys/class/android_usb/android0/functions ${sys.usb.config}
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+    setprop sys.usb.state ${sys.usb.config} 
+
+# USB MTP mode configuration
+on property:sys.usb.config=mtp
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 12d1
+    write /sys/class/android_usb/android0/idProduct 1051
+    write /sys/class/android_usb/android0/functions ${sys.usb.config}
+    write /sys/class/android_usb/android0/enable 1
+    setprop sys.usb.state ${sys.usb.config} 
+
+on property:sys.usb.config=mtp,adb
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 12d1
+    write /sys/class/android_usb/android0/idProduct 1052
+    write /sys/class/android_usb/android0/functions ${sys.usb.config}
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+    setprop sys.usb.state ${sys.usb.config} 
+
+# USB PTP mode configuration
+on property:sys.usb.config=ptp
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 12d1
+    write /sys/class/android_usb/android0/idProduct 1053
+    write /sys/class/android_usb/android0/functions ${sys.usb.config}
+    write /sys/class/android_usb/android0/enable 1
+    setprop sys.usb.state ${sys.usb.config} 
+
+on property:sys.usb.config=ptp,adb
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 12d1
+    write /sys/class/android_usb/android0/idProduct 1054
+    write /sys/class/android_usb/android0/functions ${sys.usb.config}
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+    setprop sys.usb.state ${sys.usb.config} 
+
+# modify USB accessory vid and pid to match google
+# USB accessory configuration
+on property:sys.usb.config=accessory
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 18d1
+    write /sys/class/android_usb/android0/idProduct 2d00
+    write /sys/class/android_usb/android0/functions ${sys.usb.config}
+    write /sys/class/android_usb/android0/enable 1
+    setprop sys.usb.state ${sys.usb.config} 
+
+on property:sys.usb.config=accessory,adb
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 18d1
+    write /sys/class/android_usb/android0/idProduct 2d01
+    write /sys/class/android_usb/android0/functions ${sys.usb.config}
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+    setprop sys.usb.state ${sys.usb.config} 
+# /* DTS2012011801998 chenxi 20120203 end >*/
+
+# USB udisk mode configuration
+# /* lun0/file and lun1/file will be configured by vold */
+on property:sys.usb.config=udisk,mass_storage
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 12d1
+    write /sys/class/android_usb/android0/idProduct 1005
+    write /sys/class/android_usb/android0/f_mass_storage/nluns 2
+    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index none
+    write /sys/class/android_usb/android0/functions mass_storage
+    write /sys/class/android_usb/android0/enable 1
+    setprop sys.usb.state ${sys.usb.config} 
+
+on property:sys.usb.config=udisk,mass_storage,adb
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 12d1
+    write /sys/class/android_usb/android0/idProduct 1005
+    write /sys/class/android_usb/android0/f_mass_storage/nluns 2
+    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index none
+    write /sys/class/android_usb/android0/functions mass_storage
+    write /sys/class/android_usb/android0/enable 1
+    setprop sys.usb.state ${sys.usb.config} 
+   
+# /* DTS2012022400909 chenxi 20120224 end > */
+# /* DTS2012032106408 chenxi 20120323 end > */
+
+# /* < DTS2012041000776 chenxi 20120410 begin */
+on property:sys.usb.config=slate,autorun,mass_storage
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 12d1
+    write /sys/class/android_usb/android0/idProduct 1031
+    write /sys/class/android_usb/android0/iSerial cleanup
+    write /sys/class/android_usb/android0/f_mass_storage/nluns 1
+    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index 0
+    write /sys/class/android_usb/android0/f_mass_storage/lun0/file /system/cdrom/autorun.iso
+    write /sys/class/android_usb/android0/functions mass_storage
+    write /sys/class/android_usb/android0/enable 1
+    setprop sys.usb.state ${sys.usb.config} 
+
+on property:sys.usb.config=slate,autorun,mass_storage,adb
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 12d1
+    write /sys/class/android_usb/android0/idProduct 1031
+    write /sys/class/android_usb/android0/iSerial cleanup
+    write /sys/class/android_usb/android0/f_mass_storage/nluns 1
+    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index 0
+   write /sys/class/android_usb/android0/f_mass_storage/lun0/file /system/cdrom/autorun.iso
+    write /sys/class/android_usb/android0/functions mass_storage
+    write /sys/class/android_usb/android0/enable 1
+    setprop sys.usb.state ${sys.usb.config} 
+
+on property:sys.usb.config=slate,serial,mass_storage
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 12d1
+    write /sys/class/android_usb/android0/idProduct 1035
+    write /sys/class/android_usb/android0/f_diag/clients  diag
+    write /sys/class/android_usb/android0/f_serial/transports smd,smd
+    write /sys/class/android_usb/android0/f_mass_storage/nluns 1
+    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index 0
+    write /sys/class/android_usb/android0/f_mass_storage/lun0/file /system/cdrom/autorun.iso
+    write /sys/class/android_usb/android0/functions serial,mass_storage,adb,diag
+    write /sys/class/android_usb/android0/enable 1
+    setprop sys.usb.state ${sys.usb.config} 
+
+on property:sys.usb.config=slate,serial,mass_storage,adb
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 12d1
+    write /sys/class/android_usb/android0/idProduct 1035
+    write /sys/class/android_usb/android0/f_diag/clients  diag
+    write /sys/class/android_usb/android0/f_serial/transports smd,smd
+    write /sys/class/android_usb/android0/f_mass_storage/nluns 1
+    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index 0
+    write /sys/class/android_usb/android0/f_mass_storage/lun0/file /system/cdrom/autorun.iso
+    write /sys/class/android_usb/android0/functions serial,mass_storage,adb,diag
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+    setprop sys.usb.state ${sys.usb.config} 
+    
+on property:sys.usb.config=auth,serial,mass_storage
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 12d1
+    write /sys/class/android_usb/android0/idProduct 1033
+    write /sys/class/android_usb/android0/iSerial cleanup
+    write /sys/class/android_usb/android0/f_diag/clients  diag
+    write /sys/class/android_usb/android0/f_serial/transports smd,smd
+    write /sys/class/android_usb/android0/f_mass_storage/nluns 1
+    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index 0
+    write /sys/class/android_usb/android0/f_mass_storage/lun0/file /system/cdrom/autorun.iso
+    write /sys/class/android_usb/android0/functions serial,mass_storage,adb,diag
+    write /sys/class/android_usb/android0/enable 1
+    setprop sys.usb.state ${sys.usb.config} 
+
+on property:sys.usb.config=auth,serial,mass_storage,adb
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 12d1
+    write /sys/class/android_usb/android0/idProduct 1033
+    write /sys/class/android_usb/android0/iSerial cleanup
+    write /sys/class/android_usb/android0/f_diag/clients  diag
+    write /sys/class/android_usb/android0/f_serial/transports smd,smd
+    write /sys/class/android_usb/android0/f_mass_storage/nluns 1
+    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index 0
+    write /sys/class/android_usb/android0/f_mass_storage/lun0/file /system/cdrom/autorun.iso
+    write /sys/class/android_usb/android0/functions serial,mass_storage,adb,diag
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+    setprop sys.usb.state ${sys.usb.config} 
+# /* DTS2012041000776 chenxi 20120410 end > */

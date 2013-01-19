@@ -1,0 +1,65 @@
+<Configurations>
+<Option key='CHANNEL_CODE' visible='false' defaultValue='OEM049007006' type='string'/>
+<Option key='HARDWARE_KEYBOARD_PREDICTION' visible='false' defaultValue='false' type='boolean'/>
+<Option key='ADVANCE_LANGUAGE_MODEL' visible='true' defaultValue='true' type='boolean'/>
+
+<!-- Added by Austin on 2012-07-04 -->
+<Option key='SHOW_POPUP' visible='true' defaultValue='true' type='boolean'/>
+<Option key='KEYBOARD_HEIGHT' visible='true' defaultValue='2' type='integer'/>
+<!-- End -->
+
+<!-- <Node key='TUTORIAL' visible='false'/> -->
+<Language key='/lang_cj' preloaded='false'/>
+<Language key='/lang_handwrite' preloaded='false'/>
+<Language key='/lang_pinyin' preloaded='false'/>
+<Language key='/lang_bihua' preloaded='false'/>
+<!-- <Language key='/lang_wubi' preloaded='false'/> -->
+<Language key='/lang_zhuyin' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.albanian/lang_alb' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.arabic/lang_ara' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.bosnian/lang_bos' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.bulgarian/lang_bul' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.catalan/lang_cat' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.croatian/lang_cro' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.czech/lang_cze' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.danish/lang_dan' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.dutch/lang_dut' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.estonian/lang_est' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.finnish/lang_fin' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.french/lang_fre' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.german/lang_ger' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.greek/lang_gre' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.hebrew/lang_heb' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.hindi/lang_hin' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.hungarian/lang_hun' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.icelandic/lang_ice' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.indonesian/lang_ind' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.italian/lang_ita' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.japanese/lang_jpn' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.kazakh/lang_kaz' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.korean/lang_kor' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.latvian/lang_lat' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.lithuanian/lang_lit' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.macedonian/lang_mac' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.malay/lang_mal' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.norwegian/lang_nor' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.persian/lang_fas' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.polish/lang_pol' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.portuguesebr/lang_porb' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.portuguesept/lang_porp' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.romanian/lang_rom' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.russian/lang_rus' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.serbian/lang_srp' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.serbianlatin/lang_ser' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.slovak/lang_svk' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.slovenian/lang_svn' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.spanish/lang_spn' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.spanishlatin/lang_spnl' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.swedish/lang_swe' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.tagalog/lang_tgl' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.thai/lang_thai' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.turkish/lang_tur' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.ukrainian/lang_ukr' preloaded='false'/>
+<Language key='com.cootek.smartinputv5.language.vietnamese/lang_vie' preloaded='false'/>
+
+</Configurations>

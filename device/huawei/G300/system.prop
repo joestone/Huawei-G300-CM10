@@ -1,0 +1,122 @@
+########################################        Telephony
+rild.libpath=/system/lib/libril-qc-1.so
+rild.libargs=-d /dev/smd0
+persist.rild.nitz_plmn=
+persist.rild.nitz_long_ons_0=
+persist.rild.nitz_long_ons_1=
+persist.rild.nitz_long_ons_2=
+persist.rild.nitz_long_ons_3=
+persist.rild.nitz_short_ons_0=
+persist.rild.nitz_short_ons_1=
+persist.rild.nitz_short_ons_2=
+persist.rild.nitz_short_ons_3=
+ro.config.ehrpd=true
+ril.subscription.types=NV,RUIM
+ro.telephony.ril_class=HuaweiRIL2
+ro.use_data_netmgrd=true
+# system prop for multi rild (DSDS case)
+#
+ro.multi.rild=false
+keyguard.no_require_sim=true
+ro.com.android.dataroaming=false
+ro.ril.disable.power.collapse=0 
+#
+# System prop for sending transmit power request to RIL during WiFi hotspot on/off
+#
+ro.ril.transmitpower=true
+ro.ril.shutdown=true 
+
+DEVICE_PROVISIONED=1
+################# Qualcomm Device
+com.qc.hardware=true
+ro.vendor.extension_library=/system/lib/libqc-opt.so
+
+
+#########################################   Storage
+#
+# system props for SD card emulation of emmc partition
+#
+ro.emmc.sdcard.partition=16
+#
+# Simulate sdcard on /data/media
+#
+persist.fuse_sdcard=false
+ro.emmc=1
+
+
+#
+######################################## system props for the MM modules
+#
+#media.stagefright.enable-player=true
+#media.stagefright.enable-meta=false
+#media.stagefright.enable-scan=true
+#media.stagefright.enable-http=true
+#media.stagefright.enable-fma2dp=true
+#media.stagefright.enable-aac=true
+#media.stagefright.enable-qcp=true
+# Delete lpa.use-stagefright=true to disable lpa function according to zhangmingxiu 00122733 of multimedia group
+#
+#System prop for disabling the meta data mode for encoder
+#
+debug.camcorder.disablemeta=1
+#
+# system property to enforce Phone Mode view
+#
+#ro.screen.layout=normal
+#
+# System prop for using landscape preview layout in camera
+#
+debug.camera.landscape=true
+ro.camera.sound.forced=1
+
+ro.sf.lcd_density=240
+#debug.gr.numframebuffers=3
+ro.opengles.version=131072
+#debug.sf.hw=1
+debug.composition.type=mdp
+#debug.overlayui.enable=0
+#dev.pm.dyn_samplingrate=1
+#video.accelerate.hw=1
+#debug.performance.tuning=1
+#windowsmgr.max_events_per_sec=150
+#debug.enabletr=true
+persist.sys.use_dithering=0
+debug.composition.7x27A.type=mdp
+dev.pm.dyn_sample_period=700000
+#
+# System prop for enabling the cdrom feature
+#
+persist.service.cdrom.enable=0
+
+##################################    networking
+
+wifi.interface=eth0
+ro.qualcomm.bluetooth.dun=true
+ro.bluetooth.remote.autoconnect=true
+ro.qualcomm.bluetooth.ftp=true
+#
+# system property for Bluetooth discoverability time out in seconds
+# 0: Always discoverable
+#debug.bt.discoverable_time=-1
+ro.bluetooth.request.master=true
+#TCP Fin Aggregation
+net.tcp.fin.aggregation = 1
+#Memory Cache
+net.webkit.cache.mindeadsize = 4194304
+net.webkit.cache.maxdeadsize = 4194304
+net.webkit.cache.size = 12582912
+#DNS Bug Fix and Netstack Priority Fix
+net.webkit.setpri = 1
+
+
+######################################## Misc
+
+dalvik.vm.heapstartsize=5m
+dalvik.vm.heapsize=128m
+dalvik.vm.heapgrowthlimit=36m
+ro.config.ringtone_vol_adjust=true
+
+#Fling velocity
+ro.max.fling_velocity=4000
+persist.sys.usb.config=mtp,adb
+persist.service.adb.enable=1
