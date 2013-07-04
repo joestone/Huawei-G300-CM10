@@ -150,23 +150,24 @@
     <!-- XXXXX NOTE THE FOLLOWING RESOURCES USE THE WRONG NAMING CONVENTION.
          Please don't copy them, copy anything else. -->
 
-    <!-- Boolean indicating whether Softap requires reloading AP firmware -->
-    <bool name="config_wifiApFirmwareReload">false</bool> 
+    <!-- Boolean indicating whether Softap requires reloading AP firmware 
+    <bool name="config_wifiApFirmwareReload">false</bool> -->
 
     <!-- Boolean indicating whether the start command should be called on the wireless interface 
-         when starting the SoftAp -->
-    <bool name="config_wifiApStartInterface">false</bool> 
+         when starting the SoftAp 
+    <bool name="config_wifiApStartInterface">false</bool> -->
 	
-	<!-- Boolean indicating whether the wifi chipset has p2p support
-	<bool name="config_wifi_p2p_support" translatable="false">true</bool> -->
-	<!-- Device type information conforming to Annex B format in WiFi Direct specification. The default represents a dual-mode smartphone 
-	<string name="config_wifi_p2p_device_type" translatable="false">10-0050F204-5</string> -->
+	<!-- Boolean indicating whether the wifi chipset has p2p support -->
+	<bool name="config_wifi_p2p_support" translatable="false">true</bool> 
+	<!-- Device type information conforming to Annex B format in WiFi Direct specification. The default represents a dual-mode smartphone -->
+	<string name="config_wifi_p2p_device_type" translatable="false">10-0050F204-5</string> 
 	
 	<string-array translatable="false" name="networkAttributes">
         <item>"wifi,1,1,1,-1,true"</item>
         <item>"mobile,0,0,0,-1,true"</item>
         <item>"mobile_mms,2,0,2,60000,true"</item>
         <item>"mobile_supl,3,0,2,60000,true"</item>
+		<item>"mobile_dun,4,0,3,60000,true"</item>
         <item>"mobile_hipri,5,0,3,60000,true"</item>
 		<item>"bluetooth,7,0,3,60000,true"</item>
         <item>"mobile_fota,10,0,2,60000,true"</item>
@@ -221,7 +222,7 @@
          Wifi interfaces.  If the device doesn't want to support tethering over Wifi this
          should be empty.  An example would be "softap.*" -->
     <string-array translatable="false" name="config_tether_wifi_regexs">
-        <item>wl*.*</item>
+		<item>"wl*.*"</item>
 		<item>"eth0"</item>
     </string-array>
 
@@ -251,7 +252,7 @@
     </integer-array>
 
     <!-- Boolean indicating whether the wifi chipset has dual frequency band support -->
-    <bool translatable="false" name="config_wifi_dual_band_support">true</bool>
+    <bool translatable="false" name="config_wifi_dual_band_support">false</bool>
 
     <!-- Boolean indicating whether the wifi chipset has background scan support -->
     <bool translatable="false" name="config_wifi_background_scan_support">true</bool>
@@ -300,9 +301,5 @@
         <item>10</item>
         <item>10</item>
     </integer-array>
-<!-- Boolean indicating if restoring network selection should be skipped -->
-    <!-- The restoring is handled by modem if it is true-->
-    <bool translatable="false" name="skip_restoring_network_selection">false</bool>
-	<!-- BT Deep Sleep -->
-	<!--bool name="config_bluetooth_adapter_quick_switch">false</bool-->
+
 </resources>

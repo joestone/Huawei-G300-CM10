@@ -35,11 +35,12 @@
     <storage android:mountPoint="/mnt/sdcard" 
 			 android:storageDescription="@string/storage_internal"
 			 android:allowMassStorage="false"
+   			 android:primary="true"
 			 android:removable="false" />
     <storage android:mountPoint="/mnt/sdcard-ext"
 			 android:storageDescription="@string/storage_sd_card"
-   			 android:primary="true"
-			 android:allowMassStorage="false"
+   			 android:primary="false"
+			 android:allowMassStorage="true"
 			 android:removable="true" />
 	<storage android:mountPoint="/mnt/sdcard-usb"
 			 android:storageDescription="@string/storage_usb"

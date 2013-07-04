@@ -227,3 +227,4 @@
 /dev/compass_aot          0666   root       root
 /dev/gyro          		  0666   root       root
 /dev/compass_dev          0666   root       root
+/dev/rfkill     0660    wifi    wifi

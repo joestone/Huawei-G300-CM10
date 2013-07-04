@@ -20,6 +20,8 @@ ro.multi.rild=false
 keyguard.no_require_sim=true
 ro.com.android.dataroaming=false
 ro.ril.disable.power.collapse=0 
+ro.config.hw_RemindWifiToPdp=true
+
 #
 # System prop for sending transmit power request to RIL during WiFi hotspot on/off
 #
@@ -36,24 +38,25 @@ ro.vendor.extension_library=/system/lib/libqc-opt.so
 #
 # system props for SD card emulation of emmc partition
 #
-ro.emmc.sdcard.partition=16
+ro.emmc.sdcard.partition=19
 #
 # Simulate sdcard on /data/media
 #
 persist.fuse_sdcard=false
 ro.emmc=1
-
-
+#ro.vold.switchablepair=/mnt/sdcard,/mnt/sdcard-ext
+ro.vold.umsdirtyratio=50
+#ro.additionalmounts=/mnt/sdcard-ext
 #
 ######################################## system props for the MM modules
 #
-#media.stagefright.enable-player=true
-#media.stagefright.enable-meta=false
-#media.stagefright.enable-scan=true
-#media.stagefright.enable-http=true
-#media.stagefright.enable-fma2dp=true
-#media.stagefright.enable-aac=true
-#media.stagefright.enable-qcp=true
+media.stagefright.enable-player=true
+media.stagefright.enable-meta=false
+media.stagefright.enable-scan=true
+media.stagefright.enable-http=true
+media.stagefright.enable-fma2dp=true
+media.stagefright.enable-aac=true
+media.stagefright.enable-qcp=true
 # Delete lpa.use-stagefright=true to disable lpa function according to zhangmingxiu 00122733 of multimedia group
 #
 #System prop for disabling the meta data mode for encoder
@@ -72,21 +75,31 @@ ro.camera.sound.forced=1
 ro.sf.lcd_density=240
 #debug.gr.numframebuffers=3
 ro.opengles.version=131072
-#debug.sf.hw=1
+debug.sf.hw=1
 debug.composition.type=mdp
 #debug.overlayui.enable=0
 #dev.pm.dyn_samplingrate=1
-#video.accelerate.hw=1
-#debug.performance.tuning=1
-#windowsmgr.max_events_per_sec=150
-#debug.enabletr=true
+video.accelerate.hw=1
+debug.performance.tuning=1
+windowsmgr.max_events_per_sec=150
+debug.enabletr=true
 persist.sys.use_dithering=0
 debug.composition.7x27A.type=mdp
 dev.pm.dyn_sample_period=700000
+#debug.hwc.dynThreshold=1.91
+#debug.sf.swaprect=1
+#hwui.render_dirty_regions.7x27A=true
+#gfx.highend_override=yes
+#hwui.render_dirty_regions=true
+
+##############################       DUALMIC
+ro.config.dualmic=true
+
+
 #
 # System prop for enabling the cdrom feature
 #
-persist.service.cdrom.enable=0
+persist.service.cdrom.enable=1
 
 ##################################    networking
 
@@ -118,5 +131,6 @@ ro.config.ringtone_vol_adjust=true
 
 #Fling velocity
 ro.max.fling_velocity=4000
+
 persist.sys.usb.config=mtp,adb
 persist.service.adb.enable=1

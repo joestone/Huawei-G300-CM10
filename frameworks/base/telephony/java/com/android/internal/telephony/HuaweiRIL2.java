@@ -125,8 +125,8 @@ public class HuaweiRIL2 extends RIL implements CommandsInterface {
         RILRequest rr
                 = RILRequest.obtain(RIL_REQUEST_SIM_IO, result);
 
-//        if (mUSIM)
-//            path = path.replaceAll("7F20$","7FFF");
+        if (mUSIM)
+            path = path.replaceAll("7F20$","7FFF");
 
         rr.mp.writeInt(command);
         rr.mp.writeInt(fileid);
@@ -216,29 +216,76 @@ public class HuaweiRIL2 extends RIL implements CommandsInterface {
             dataCall.cid = p.readInt();
             dataCall.active = p.readInt();
             dataCall.type = p.readString();
-            String unknown = p.readString();//possible ifname
+            dataCall.ifname = p.readString();
+			if ((dataCall.status == DataConnection.FailCause.NONE.getErrorCode()) &&
+                    TextUtils.isEmpty(dataCall.ifname) && dataCall.active != 0) {
+              throw new RuntimeException("getDataCallState, no ifname");
+            }
 			String addresses = p.readString();
-			String dnses = p.readString();
-			String gateways = p.readString();
-						
-			dataCall.ifname = unknown ;//"rmnet0" ;
-			
-                    
             if (!TextUtils.isEmpty(addresses)) {
                 dataCall.addresses = addresses.split(" ");
             }
-            
+            String dnses = p.readString();
             if (!TextUtils.isEmpty(dnses)) {
                 dataCall.dnses = dnses.split(" ");
             }
-            
+            String gateways = p.readString();
             if (!TextUtils.isEmpty(gateways)) {
                 dataCall.gateways = gateways.split(" ");
             }
+			       
+            
 			if (RILJ_LOGD) riljLog("DataCallstate got addresses=" + addresses);
                 if (RILJ_LOGD) riljLog("DataCallstate got dnses=" + dnses);
 		
                 if (RILJ_LOGD) riljLog("DataCallstate got gateways=" + gateways);	
+        return dataCall;
+    }
+    @Override
+    protected Object
+    responseSetupDataCall(Parcel p) {
+        int ver = p.readInt();
+        int num = p.readInt();
+        if (RILJ_LOGV) riljLog("responseSetupDataCall ver=" + ver + " num=" + num);
+
+        DataCallState dataCall;
+
+        if (ver < 5) {
+            dataCall = new DataCallState();
+            dataCall.version = ver;
+            dataCall.cid = Integer.parseInt(p.readString());
+            dataCall.ifname = p.readString();
+            if (TextUtils.isEmpty(dataCall.ifname)) {
+                throw new RuntimeException(
+                        "RIL_REQUEST_SETUP_DATA_CALL response, no ifname");
+            }
+            String addresses = p.readString();
+            if (!TextUtils.isEmpty(addresses)) {
+              dataCall.addresses = addresses.split(" ");
+            }
+            if (num >= 4) {
+                String dnses = p.readString();
+                if (RILJ_LOGD) riljLog("responseSetupDataCall got dnses=" + dnses);
+                if (!TextUtils.isEmpty(dnses)) {
+                    dataCall.dnses = dnses.split(" ");
+                }
+            }
+            if (num >= 5) {
+                String gateways = p.readString();
+                if (RILJ_LOGD) riljLog("responseSetupDataCall got gateways=" + gateways);
+                if (!TextUtils.isEmpty(gateways)) {
+                    dataCall.gateways = gateways.split(" ");
+                }
+            }
+        } else {
+            if (num != 1) {
+                throw new RuntimeException(
+                        "RIL_REQUEST_SETUP_DATA_CALL response expecting 1 RIL_Data_Call_response_v5"
+                        + " got " + num);
+            }
+            dataCall = getDataCallState(p, ver);
+        }
+
         return dataCall;
     }
 
@@ -255,6 +302,31 @@ public class HuaweiRIL2 extends RIL implements CommandsInterface {
 
         send(rr);
     }
+    @Override
+    protected Object
+    responseOperatorInfos(Parcel p) {
+        String strings[] = (String [])responseStrings(p);
+        ArrayList<OperatorInfo> ret;
+
+        if (strings.length % 4 != 0) {
+            throw new RuntimeException(
+                "RIL_REQUEST_QUERY_AVAILABLE_NETWORKS: invalid response. Got "
+                + strings.length + " strings, expected multible of 4");
+        }
+
+        ret = new ArrayList<OperatorInfo>(strings.length / 4);
+
+        for (int i = 0 ; i < strings.length ; i += 4) {
+            ret.add (
+                new OperatorInfo(
+                    strings[i+0],
+                    strings[i+1],
+                    strings[i+2],
+                    strings[i+3]));
+        }
+
+        return ret;
+    }
 
     @Override
     public void setCurrentPreferredNetworkType() {
@@ -267,13 +339,24 @@ public class HuaweiRIL2 extends RIL implements CommandsInterface {
         /**
           * If not using a USIM, ignore LTE mode and go to 3G
           */
-        if (!mUSIM && networkType == RILConstants.NETWORK_MODE_LTE_GSM_WCDMA &&
+        RILRequest rr = RILRequest.obtain(
+                RILConstants.RIL_REQUEST_SET_PREFERRED_NETWORK_TYPE, response);
+
+        rr.mp.writeInt(1);
+        rr.mp.writeInt(networkType);
+		//We are not LTE capable
+		if (networkType == RILConstants.NETWORK_MODE_LTE_GSM_WCDMA &&
                  mSetPreferredNetworkType >= RILConstants.NETWORK_MODE_WCDMA_PREF) {
             networkType = RILConstants.NETWORK_MODE_WCDMA_PREF;
         }
         mSetPreferredNetworkType = networkType;
+		mPreferredNetworkType = networkType;
 
-        super.setPreferredNetworkType(networkType, response);
+        if (RILJ_LOGD) riljLog(rr.serialString() + "> " + requestToString(rr.mRequest)
+                + " : " + networkType);
+
+        send(rr);
+        //super.setPreferredNetworkType(networkType, response);
     }
 
     @Override
@@ -327,12 +410,6 @@ public class HuaweiRIL2 extends RIL implements CommandsInterface {
         Object ret = null;
 
         if (error == 0 || p.dataAvail() > 0) {
-
-            /* Convert RIL_REQUEST_GET_MODEM_VERSION back */
-            if (SystemProperties.get("ro.cm.device").indexOf("e73") == 0 &&
-                  rr.mRequest == 220) {
-                rr.mRequest = RIL_REQUEST_BASEBAND_VERSION;
-            }
 
             // either command succeeds or command fails but with data payload
             try {switch (rr.mRequest) {
@@ -449,6 +526,7 @@ public class HuaweiRIL2 extends RIL implements CommandsInterface {
             case 106: ret = responseStrings(p); break; 
             case 107: ret = responseInts(p);  break; 
             case RIL_REQUEST_VOICE_RADIO_TECH: ret = responseInts(p); break;
+			case RIL_REQUEST_SET_TRANSMIT_POWER: ret = responseVoid(p); break; 
 			
 		
             default:
@@ -496,14 +574,16 @@ public class HuaweiRIL2 extends RIL implements CommandsInterface {
 
         switch(response) {
 		
-*/			
+			
 			case RIL_UNSOL_RESPONSE_RADIO_STATE_CHANGED: ret =  responseVoid(p); break;
             case RIL_UNSOL_RIL_CONNECTED: ret = responseInts(p); break;
-            case RIL_UNSOL_VOICE_RADIO_TECH_CHANGED: ret = responseVoid(p); break;
-            case 1036: ret = responseVoid(p); break; 
-            case 1037: ret = responseVoid(p); break; 
-            case 1038: ret = responseVoid(p); break; 
-
+            case RIL_UNSOL_VOICE_RADIO_TECH_CHANGED: ret = responseInts(p); break;
+            //case 1036: ret = responseVoid(p); break; 
+            case RIL_UNSOL_TETHERED_MODE_STATE_CHANGED: ret = responseInts(p); break; 
+            //case 1038: ret = responseVoid(p); break; 
+			case RIL_UNSOL_UICC_SUBSCRIPTION_STATUS_CHANGED: ret =  responseInts(p); break; 
+			case RIL_UNSOL_RESPONSE_IMS_NETWORK_STATE_CHANGED: ret =  responseVoid(p); break; 
+			
             default:
                 // Rewind the Parcel
                 p.setDataPosition(dataPosition);
@@ -525,21 +605,29 @@ public class HuaweiRIL2 extends RIL implements CommandsInterface {
                 break;
             
 			case RIL_UNSOL_VOICE_RADIO_TECH_CHANGED:
-				if (RILJ_LOGD) unsljLogRet(response, ret);
+				 if (RILJ_LOGD) unsljLogRet(response, ret);
 
-                notifyRegistrantsRilConnectionChanged(((int[])ret)[0]);
-                break;
-            //case 1035:
-            case 1036:
-            case 1038:
-                break;
-            case 1037:
-                if (RILJ_LOGD) unsljLogRet(response, ret);
-
-                if (mExitEmergencyCallbackModeRegistrants != null) {
-                    mExitEmergencyCallbackModeRegistrants.notifyRegistrants(
-                                        new AsyncResult (null, null, null));
+                if (mVoiceRadioTechChangedRegistrants != null) {
+                    mVoiceRadioTechChangedRegistrants.notifyRegistrants(
+                            new AsyncResult(null, ret, null));
                 }
+                break;
+			case RIL_UNSOL_DATA_NETWORK_STATE_CHANGED:
+                if (RILJ_LOGD) unsljLog(response);
+
+                mDataNetworkStateRegistrants
+                    .notifyRegistrants(new AsyncResult(null, null, null));
+            break; 	
+             //case 1035:
+            //case 1036:
+			//	break;
+            /*case 1038:
+                if (RILJ_LOGD) unsljLog(response);
+
+                mDataNetworkStateRegistrants
+                    .notifyRegistrants(new AsyncResult(null, null, null));
+            break; */
+            case 1037:
                 break;
         }
     }
@@ -729,5 +817,15 @@ public class HuaweiRIL2 extends RIL implements CommandsInterface {
 
         send(rr);
     }
+	public void setTransmitPower(int powerLevel, Message result) {
+        RILRequest rr = RILRequest.obtain(RIL_REQUEST_SET_TRANSMIT_POWER, result);
 
+        rr.mp.writeInt(1);
+        rr.mp.writeInt(powerLevel);
+
+        if (RILJ_LOGD)
+            riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
+
+        send(rr);
+    } 
 }

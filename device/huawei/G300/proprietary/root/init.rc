@@ -1,6 +1,5 @@
-
-import /init.usb.rc
-
+#import /init.usb.rc
+import /init.qcom.usb.rc
 on early-init
     # Set init and its forked children's oom_adj.
     write /proc/1/oom_adj -16
@@ -152,8 +151,9 @@ loglevel 3
 #service qcom-usb-sh /system/bin/sh /init.qcom.usb.sh
 #    class core
 #    user root
-#    oneshot 	
-	
+#    oneshot 
+
+
 on fs
 # mount mtd partitions
     # Mount /system rw first to give the filesystem a chance to save a checkpoint
@@ -175,6 +175,8 @@ on emmc-fs
     exec /system/bin/e2fsck -p /dev/block/mmcblk0p13
     mount ext4 /dev/block/mmcblk0p13 /data nosuid nodev barrier=1 noauto_da_alloc,nodelalloc
     mount ext4 /dev/block/mmcblk0p6 /cache nosuid nodev barrier=1,nodelalloc
+	write /sys/module/block2mtd/parameters/block2mtd /dev/block/mmcblk0p17 
+
     #/* DTS2012021003176 yanzhijun 20120210 end >*/ 
 	on property:sys.radio.shutdown=true
     write  /sys/devices/platform/rs300000a7.65536/force_sync 1
@@ -278,12 +280,13 @@ on post-fs-data
     mkdir /data/misc/wifi
     chmod 0770 /data/misc/wifi
     chown wifi wifi /data/misc/wifi/ 
-	mkdir /data/misc/wifi/sockets 0775 wifi wifi
-    mkdir /data/misc/wpa_supplicant 0775 wifi wifi
-    mkdir /data/misc/wifi/load
-    chmod 0775 /data/misc/wifi/load
-    chown system system /data/misc/wifi/load/
-    mkdir /data/misc/wifi/bin 0775 system system 
+	mkdir /data/misc/wifi/hostapd 0770 wifi wifi
+	mkdir /data/misc/wifi/sockets 0770 wifi wifi
+    mkdir /data/misc/wpa_supplicant 0770 wifi wifi
+#    mkdir /data/misc/wifi/load
+#    chmod 0775 /data/misc/wifi/load
+#    chown system system /data/misc/wifi/load/
+ #   mkdir /data/misc/wifi/bin 0775 system system 
 	
 	
     chmod 0660 /data/misc/wifi/wpa_supplicant.conf
@@ -371,6 +374,10 @@ on post-fs-data
     chown system system /sys/devices/platform/msm_sdcc.2/polling
     chown system system /sys/devices/platform/msm_sdcc.3/polling
     chown system system /sys/devices/platform/msm_sdcc.4/polling
+
+   #Provide the access to hostapd.conf only to root and group
+    chmod 0660 /data/misc/wifi/hostapd.conf
+	
 #END From Huawei.rc
 
     # If there is no fs-post-data action in the init.<device>.rc file, you
@@ -379,6 +386,8 @@ on post-fs-data
     # Set indication (checked by vold) that we have finished this action
     setprop vold.post_fs_data_done 1
 
+	
+	
 # Include extra init file
     import /init.cm.rc
 
@@ -433,7 +442,7 @@ on boot
     chmod 0660 /dev/smd0
     chown system system /dev/smd0
 
-    chmod 0444 /sys/devices/platform/msm_hsusb/gadget/usb_state
+    chmod 0666 /sys/devices/platform/msm_hsusb/gadget/usb_state
 
     # create symlink for fb1 as HDMI
     symlink /dev/graphics/fb1 /dev/graphics/hdmi
@@ -663,16 +672,19 @@ on boot
 # /* DTS2012011801998 chenxi 20120203 end >*/
 # Define TCP buffer sizes for various networks
 #   ReadMin, ReadInitial, ReadMax, WriteMin, WriteInitial, WriteMax,
-    setprop net.tcp.buffersize.default 4096,87380,110208,4096,16384,110208
+    setprop net.tcp.buffersize.default 4096,87380,704512,4096,16384,110208
     setprop net.tcp.buffersize.wifi    524288,1048576,2097152,262144,524288,1048576
-    setprop net.tcp.buffersize.lte     4094,87380,1220608,4096,16384,1220608
-    setprop net.tcp.buffersize.umts    4094,87380,110208,4096,16384,110208
-    setprop net.tcp.buffersize.hspa    4094,87380,1220608,4096,16384,1220608
-    setprop net.tcp.buffersize.hsupa   4094,87380,1220608,4096,16384,1220608
-    setprop net.tcp.buffersize.hsdpa   4094,87380,1220608,4096,16384,1220608
-    setprop net.tcp.buffersize.edge    4093,26280,35040,4096,16384,35040
-    setprop net.tcp.buffersize.gprs    4092,8760,11680,4096,8760,11680
-    setprop net.tcp.buffersize.evdo_b  4094,87380,262144,4096,16384,262144
+    setprop net.tcp.buffersize.lte     4096,87380,1220608,4096,16384,563200
+    setprop net.tcp.buffersize.umts    4096,87380,563200,4096,16384,110208
+    setprop net.tcp.buffersize.hspa    4096,87380,704512,4096,16384,110208
+    setprop net.tcp.buffersize.hsupa   4096,87380,704512,4096,16384,262144
+    setprop net.tcp.buffersize.hsdpa   4096,87380,704512,4096,16384,262144
+    setprop net.tcp.buffersize.hspap   4096,87380,1220608,4096,16384,393216
+    setprop net.tcp.buffersize.edge    4096,26280,35040,4096,16384,35040
+    setprop net.tcp.buffersize.gprs    4096,8760,11680,4096,8760,11680
+    setprop net.tcp.buffersize.evdo    4096,87380,563200,4096,16384,262144
+    setprop net.tcp.buffersize.evdo_b  4096,87380,704512,4096,16384,262144
+
 
 # Assign TCP buffer thresholds to be ceiling value of technology maximums
 # Increased technology maximums should be reflected here.
@@ -714,7 +726,13 @@ on property:vold.decrypt=trigger_shutdown_framework
     class_reset late_start
     class_reset main
 
-    
+#setprop persist.sys.usb.config mtp,adb	
+
+
+	
+ 
+
+ 
 
 chmod 0664 /dev/accel
 chmod 0664 /dev/compass_aot
@@ -745,25 +763,7 @@ service adbd /sbin/adbd
 on property:ro.kernel.qemu=1
     start adbd
 
-# This property trigger has added to imitiate the previous behavior of "adb root".
-# The adb gadget driver used to reset the USB bus when the adbd daemon exited,
-# and the host side adb relied on this behavior to force it to reconnect with the
-# new adbd instance after init relaunches it. So now we force the USB bus to reset
-# here when adbd sets the service.adb.root property to 1.  We also restart adbd here
-# rather than waiting for init to notice its death and restarting it so the timing
-# of USB resetting and adb restarting more closely matches the previous behavior.
-on property:service.adb.root=1
-    write /sys/class/android_usb/android0/enable 0
-    restart adbd
-    write /sys/class/android_usb/android0/enable 1
 
-on property:persist.service.adb.enable=1
-    start adbd
-
-on property:persist.service.adb.enable=0
-    stop adbd
-
-	
 service servicemanager /system/bin/servicemanager
     class core
     user system
@@ -812,7 +812,7 @@ service zygote /system/bin/app_process -Xzygote /system/bin --zygote --start-sys
 service drm /system/bin/drmserver
     class main
     user drm
-    group system inet drmrpc sdcard_rw
+    group drm system inet drmrpc sdcard_r
 
 service media /system/bin/mediaserver
     class main
@@ -836,28 +836,58 @@ service dbus /system/bin/dbus-daemon --system --nofork
 on property:init.svc.wpa_supplicant=stopped
     stop dhcpcd
 
-service wpa_supplicant /system/bin/wpa_supplicant -Dnl80211 -ieth0 -W -c/data/misc/wifi/wpa_supplicant.conf
-#service wpa_supplicant /system/bin/wpa_supplicant -Dwext -ieth0 -W -c/data/misc/wifi/wpa_supplicant.conf
-    class main
-	group wifi inet
-    socket wpa_eth0 dgram 660 wifi wifi 
+#service wlan_detect /system/bin/wlan_detect
+#    class main
+#    user root
+#    group root
+#    oneshot
+ 	
+service wpa_supplicant /system/bin/wpa_supplicant -Dnl80211 -ieth0 -W -e/data/misc/wifi/entropy.bin -c/data/misc/wifi/wpa_supplicant.conf 
+	class main
+	socket wpa_eth0 dgram 0660 wifi wifi
     disabled
     oneshot
 
-service p2p_supplicant /system/bin/wpa_supplicant -Dnl80211 -ieth0 -puse_p2p_group_interface=1 -W -c/data/misc/wifi/p2p_supplicant.conf
-    class main
-    disabled
-    oneshot
-
-service dhcpcd_eth0 /system/bin/dhcpcd -BKLG
-    class main
-    disabled 
-    oneshot
+service dhcpcd_eth0 /system/bin/dhcpcd -ABKL
+     class main
+     disabled
+     oneshot
 
 service iprenew_eth0 /system/bin/dhcpcd -n
     class main        
     disabled        
+    oneshot	
+	
+#service p2p_supplicant /system/bin/wpa_supplicant -Dnl80211 -ieth0 -puse_p2p_group_interface=1 -W -c/data/misc/wifi/wpa_supplicant.conf
+#class main
+#socket wpa_eth0 dgram 0660 wifi wifi
+#disabled
+#oneshot
+
+service p2p_supplicant /system/bin/wpa_supplicant \
+    -ieth0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf -N \
+    -ip2p0 -Dnl80211 -c/data/misc/wifi/p2p_supplicant.conf -e/data/misc/wifi/entropy.bin -puse_p2p_group_interface=1
+    class main
+    socket wpa_eth0 dgram 660 wifi wifi
+    disabled
     oneshot
+
+service dhcpcd_p2p /system/bin/dhcpcd -aABKL
+     class main
+     disabled
+     oneshot
+
+service iprenew_p2p /system/bin/dhcpcd -n
+    class main
+    disabled
+    oneshot
+
+service hostapd /system/bin/hostapd /data/misc/wifi/hostapd.conf
+    socket hostapd_eth0 dgram 660 wifi wifi
+    group wifi inet
+    oneshot
+    disabled
+
 
 #service nfc_check /system/bin/nfc_check
 #    class main
@@ -932,8 +962,6 @@ service akm8962 /system/bin/akmd8962
     class main
     disabled
     oneshot
-service oem_rpc_svc /system/bin/oem_rpc_svc
-    class core
 
 service hciattach /system/bin/sh /system/etc/bluetooth/init.bcm.bt.sh
 //service hciattach  /system/bin/brcm_patchram_plus -d --enable_hci --enable_lpm --baudrate 3000000 --bd_addr 00:18:82:23:76:1d --patchram /system/etc/bluetooth/BCM4330.hcd /dev/ttyHS0 &
@@ -942,12 +970,18 @@ service hciattach /system/bin/sh /system/etc/bluetooth/init.bcm.bt.sh
     disabled 
 
 service rmt_storage /system/bin/rmt_storage /dev/block/mmcblk0p10 /dev/block/mmcblk0p11 /dev/block/mmcblk0p17
-    class late_start
+    class main
     user root
     disabled
 
+service rmt_oeminfo /system/bin/rmt_oeminfo
+    class main
+    user root
+    oneshot
+	
 on property:ro.emmc=1
     start rmt_storage
+	start rmt_oeminfo
 
 on property:crypto.driver.load=1
      insmod /system/lib/modules/qce.ko
@@ -958,7 +992,7 @@ on property:crypto.driver.load=0
      exec /system/bin/rmmod qce.ko
 
 service qcom-post-boot /system/bin/sh /system/etc/init.qcom.post_boot.sh
-    class late_start
+    class main
     user root
     disabled
     oneshot
@@ -966,12 +1000,19 @@ service qcom-post-boot /system/bin/sh /system/etc/init.qcom.post_boot.sh
 on property:sys.boot_completed=1
     start qcom-post-boot
 
-service fm_dl /system/bin/sh /system/etc/init.qcom.fm.sh
-    class late_start
-    user root
-    group system qcom_oncrpc
-    disabled
-    oneshot
+service netmgrd /system/bin/netmgrd
+    class main
+	
+on property:ro.use_data_netmgrd=false
+    # netmgr not supported on specific target
+    stop netmgrd
+	
+#service fm_dl /system/bin/sh /system/etc/init.qcom.fm.sh
+#    class main
+#    user root
+#    group system qcom_oncrpc
+#    disabled
+#    oneshot
     
 service dhcpcd_brcm-pan /system/bin/dhcpcd -ABKL
         class main
@@ -1010,38 +1051,98 @@ service bluetoothd /system/bin/bluetoothd -n
     group bluetooth net_bt_admin misc
     disabled
 #/* DTS2012020604357 zhangyun 20120206 end > */
-    
 
-service bridgemgrd /system/bin/bridgemgrd
-    class late_start
-    user radio
-    group radio
-    disabled
+on property:bluetooth.isEnabled=true
+    start btwlancoex
+    start amp_load
+    write /sys/class/bluetooth/hci0/idle_timeout 7000
 
-service port-bridge /system/bin/port-bridge /dev/smd0 /dev/ttyGS0
-    class late_start
-    user system
-    group system inet
+on property:bluetooth.isEnabled=false
+    start amp_unload
+
+service bt-dun /system/bin/dun-server /dev/smd7 /dev/rfcomm0
+    class main
     disabled
+    oneshot
+
+service bt-sap /system/bin/sapd 15
+    class main
+    disabled
+    oneshot
+
+service sapd /system/bin/sdptool add --channel=15 SAP
+    class main
+    user bluetooth
+    group bluetooth net_bt_admin
+    disabled
+    oneshot
+
+service dund /system/bin/sdptool add --channel=1 DUN
+    class main
+    user bluetooth
+    group bluetooth net_bt_admin
+    disabled
+    oneshot    
+
+#service bridgemgrd /system/bin/bridgemgrd
+#    class main
+#    user radio
+#    group radio
+#    disabled
+
+#service port-bridge /system/bin/port-bridge /dev/smd0 /dev/ttyGS0
+#    class main
+#    user system
+#    group system inet
+#    disabled
 
 on property:ro.baseband="msm"
     # Enable BT-DUN only for all msms
     setprop ro.qualcomm.bluetooth.dun true
 
-service qmiproxy /system/bin/qmiproxy
-    class late_start
-    user radio
-    group radio
-    disabled
+#service qmiproxy /system/bin/qmiproxy
+#    class main
+#    user radio
+#    group radio
+#    disabled
 #/* <DTS2011112804765 wangdong 20111206 begin */
-service pcm-bridge /system/bin/pcm-bridge /dev/smd7 /dev/ttyGS1
+#service pcm-bridge /system/bin/pcm-bridge /dev/smd7 /dev/ttyGS1
 #/* DTS2011112804765 wangdong 20111206 end> */
 
 service qmuxd /system/bin/qmuxd
-    class late_start
+    class main
     user radio
     group radio
 
 	
-service netmgrd /system/bin/netmgrd
-    class late_start
+# Adjust socket buffer to enlarge TCP receive window for high bandwidth
+# but only if ro.data.large_tcp_window_size property is set.
+on property:ro.data.large_tcp_window_size=true
+    write /proc/sys/net/ipv4/tcp_adv_win_scale  1
+
+service btwlancoex /system/bin/sh /system/etc/init.qcom.coex.sh
+    class main
+    user bluetooth
+    group bluetooth net_bt_admin inet net_admin net_raw
+    disabled
+    oneshot
+
+service amp_init /system/bin/amploader -i
+    class main
+    user root
+    disabled
+    oneshot
+
+service amp_load /system/bin/amploader -l 7000
+    class main
+    user root
+    disabled
+    oneshot
+
+service amp_unload /system/bin/amploader -u
+    class main
+    user root
+    disabled
+    oneshot
+
+

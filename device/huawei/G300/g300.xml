@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  
+  <remove-project name="CyanogenMod/android_hardware_libhardware" />
+  <project name="Albinoman887/android_hardware_libhardware" path="hardware/libhardware" revision="jellybean" />
+  <remove-project name="CyanogenMod/android_frameworks_native" />
+  <project name="Albinoman887/android_frameworks_native" path="frameworks/native" revision="jellybean" />
+  <remove-project name="CyanogenMod/android_frameworks_av" />
+  <project name="Albinoman887/android_frameworks_av" path="frameworks/av" revision="jellybean" />
+  <remove-project name="CyanogenMod/android_frameworks_base" />
+  <project name="Albinoman887/android_frameworks_base" path="frameworks/base" revision="jellybean" />
+  <remove-project name="CyanogenMod/android_hardware_qcom_media" />
+  <project name="Albinoman887/android_hardware_qcom_media" path="hardware/qcom/media" revision="jellybean" />
+  <project name="Team-Hydra/android_hardware_qcom_display-legacy" path="hardware/qcom/display-legacy" revision="jellybean" />
+  <project name="Team-Hydra/android_hardware_qcom_media-legacy" path="hardware/qcom/media-legacy" revision="jellybean" />
+  <project name="Albinoman887/android_hardware_qcom_audio-legacy" path="hardware/qcom/audio-legacy" revision="jellybean" />
+</manifest>

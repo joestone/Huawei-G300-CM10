@@ -44,7 +44,7 @@ struct msm_rotator_img_info {
  unsigned int dst_y;
  unsigned char rotations;
  int enable;
- // int secure;
+ int secure;
  unsigned int downscale_ratio;
 /* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
 };

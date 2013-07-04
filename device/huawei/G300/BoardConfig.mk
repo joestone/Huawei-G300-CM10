@@ -13,6 +13,7 @@ TARGET_ARCH_VARIANT := armv7-a-neon
 ARCH_ARM_HAVE_TLS_REGISTER := true
 TARGET_GLOBAL_CFLAGS += -mfpu=neon -mfloat-abi=softfp -march=armv7-a 
 TARGET_GLOBAL_CPPFLAGS += -mfpu=neon -mfloat-abi=softfp -march=armv7-a
+ARCH_ARM_HAVE_TLS_REGISTER := true
 
 TARGET_BOARD_PLATFORM_GPU := qcom-adreno200
 BOARD_USES_ADRENO_200 := true
@@ -21,8 +22,6 @@ TARGET_PROVIDES_INIT_RC := true
 TARGET_PROVIDES_RECOVERY_INIT_RC := true
 TARGET_RECOVERY_INITRC := device/huawei/G300/init.rc
 TARGET_CPU_SMP := true
-TARGET_AVOID_DRAW_TEXTURE_EXTENSION := true
-TARGET_USES_16BPPSURFACE_FOR_OPAQUE := true
 
 TARGET_CORTEX_CACHE_LINE_32 := true
 TARGET_USE_SPARROW_BIONIC_OPTIMIZATION := true
@@ -45,14 +44,13 @@ BOARD_NEEDS_MEMORYHEAPPMEM := true
 #Graphics
 BOARD_EGL_CFG := device/huawei/G300/proprietary/lib/egl/egl.cfg
 USE_OPENGL_RENDERER := true
-COMMON_GLOBAL_CFLAGS += -DFORCE_CPU_UPLOAD -DQCOM_NO_SECURE_PLAYBACK 
-#TARGET_NO_HW_VSYNC := true
-#BOARD_ADRENO_DECIDE_TEXTURE_TARGET := true
-BOARD_USE_SKIA_LCDTEXT := true
+COMMON_GLOBAL_CFLAGS += -DFORCE_CPU_UPLOAD 
+COMMON_GLOBAL_CFLAGS += -DQCOM_NO_SECURE_PLAYBACK -DQCOM_LEGACY_OMX -DQCOM_ICS_COMPAT -DQCOM_NO_DMX_SUPPORT -DQCOM_ROTATOR_KERNEL_FORMATS
 TARGET_GRALLOC_USES_ASHMEM := true
 BOARD_AVOID_DRAW_TEXTURE_EXTENSION := true
 BOARD_USES_16BPPSURFACE_FOR_OPAQUE := true
-
+TARGET_AVOID_DRAW_TEXTURE_EXTENSION := true
+TARGET_USES_16BPPSURFACE_FOR_OPAQUE := true
 
 #Browser
 ENABLE_WEBGL := true
@@ -72,45 +70,39 @@ BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := default
 
 # Audio
 BOARD_HAVE_QCOM_FM := true
-COMMON_GLOBAL_CFLAGS += -DQCOM_VOIP_ENABLED -DQCOM_FM_ENABLED
-
+COMMON_GLOBAL_CFLAGS += -DWITH_QCOM_FM -DQCOM_FM_ENABLED -DQCOM_VOIP_ENABLED 
+TARGET_PROVIDES_LIBAUDIO := true
 
 # Wi-Fi
+BOARD_HAVE_HUAWEI_WIFI := true
 WPA_SUPPLICANT_VERSION      := VER_0_8_X
 BOARD_WPA_SUPPLICANT_DRIVER := NL80211
 BOARD_WLAN_DEVICE           := bcmdhd
 WIFI_DRIVER_MODULE_PATH     := "/system/lib/modules/dhd_4330.ko"
-#WIFI_DRIVER_FW_PATH_STA     := "/vendor/firmware/fw_bcmdhd.bin"
-#WIFI_DRIVER_FW_PATH_AP      := "/vendor/firmware/fw_bcmdhd_apsta.bin"
-#WIFI_DRIVER_FW_PATH_P2P     := "/vendor/firmware/fw_bcmdhd_p2p.bin"
 BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_bcmdhd
 BOARD_HOSTAPD_DRIVER        := NL80211
 BOARD_HOSTAPD_PRIVATE_LIB   := lib_driver_cmd_bcmdhd
 WIFI_DRIVER_MODULE_NAME := "dhd_4330"
+BOARD_LEGACY_NL80211_STA_EVENTS := true
 WIFI_DRIVER_FW_PATH_STA := "/system/wifi/fw_4330_b2.bin"
-#WIFI_DRIVER_FW_PATH_P2P := "/system/wifi/fw_4330_b2.bin"
-WIFI_DRIVER_FW_PATH_AP := "/system/wifi/fw_4330_b2.bin"
+WIFI_DRIVER_FW_PATH_P2P := "/system/wifi/fw_4330_b2_p2p.bin"
+WIFI_DRIVER_FW_PATH_AP := "/system/wifi/fw_4330_b2_apsta.bin"
 WIFI_DRIVER_FW_PATH_PARAM := "/sys/module/dhd_4330/parameters/firmware_path"
 WIFI_DRIVER_MODULE_ARG := "firmware_path=/system/wifi/fw_4330_b2.bin nvram_path=/system/wifi/nvram_4330.txt"
-WIFI_BAND                        := 802_11_ABGN
-#WIFI_EXT_MODULE_PATH := "/system/lib/modules/cfg80211.ko"
-#WIFI_EXT_MODULE_NAME := cfg80211.ko
+WIFI_BAND                        := 802_11_ABG
 
-#BOARD_WEXT_NO_COMBO_SCAN := true
-#BOARD_MOBILEDATA_INTERFACE_NAME := rmnet0
-#BOARD_NETWORK_INTERFACES_DIR := "/sys/devices/virtual/net"
-#PRODUCT_WIRELESS_TOOLS := true
+PRODUCT_WIRELESS_TOOLS := true
 
 # Bluetooth
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_BCM := true
+
 
 #RIL
 #BOARD_USES_HC_RADIO := true
 #BOARD_PROVIDES_LIBRIL := true
 
 #Sensors
-#BOARD_INVENSENSE_APPLY_COMPASS_NOISE_FILTER := true
 TARGET_PROVIDES_LIBLIGHTS :=true
 
 
@@ -119,7 +111,7 @@ TARGET_BOOTANIMATION_PRELOAD := true
 
 BOARD_KERNEL_CMDLINE := console=ttyDCC0 androidboot.hardware=huawei
 BOARD_KERNEL_BASE := 0x00200000
-BOARD_PAGE_SIZE := 4096
+BOARD_PAGE_SIZE := 2048
 
 
 BOARD_BOOTIMAGE_PARTITION_SIZE := 0x00C00000
@@ -131,21 +123,15 @@ TARGET_USERIMAGES_USE_EXT4 := true
 
 BOARD_HAS_NO_MISC_PARTITION := true
 
-#TARGET_KERNEL_CUSTOM_TOOLCHAIN := arm-eabi-4.4.3
+TARGET_KERNEL_CUSTOM_TOOLCHAIN := arm-eabi-4.4.3
 TARGET_KERNEL_SOURCE := kernel/huawei/kernel
 TARGET_KERNEL_CONFIG := g300_jb_defconfig
 
-
-#TARGET_PREBUILT_RECOVERY_KERNEL := device/huawei/G300/kernel
-
 BOARD_HAS_NO_SELECT_BUTTON := true
 # Use this flag if the board has a ext4 partition larger than 2gb
-#BOARD_HAS_LARGE_FILESYSTEM := true
-#BOARD_CUSTOM_GRAPHICS := ../../../device/zte/smarttab_common/recovery/minui/graphics.c 
+BOARD_HAS_LARGE_FILESYSTEM := true
 
 # SD Card
-#BOARD_SDCARD_DEVICE_PRIMARY := /dev/block/mmcblk1p1	#  9 /sdcard vfat /dev/block/mmcblk1p1
-#BOARD_SDCARD_DEVICE_SECONDARY := /dev/block/mmcblk1	#  9 /sdcard vfat /dev/block/mmcblk1		
 BOARD_HAS_SDCARD_INTERNAL := true
 BOARD_SDEXT_DEVICE := /dev/block/mmcblk1p1
 BOARD_USES_MMCUTILS := true
@@ -153,15 +139,12 @@ BOARD_USES_MMCUTILS := true
 # Insecure boot
 ADDITIONAL_DEFAULT_PROPERTIES += ro.secure=0
 ADDITIONAL_DEFAULT_PROPERTIES += persist.service.adb.enable=1
-ADDITIONAL_DEFAULT_PROPERTIES += persist.sys.usb.config=mtp
 
 
-TARGET_USE_CUSTOM_SECOND_LUN_NUM := 1
-BOARD_VOLD_EMMC_SHARES_DEV_MAJOR := true
 BOARD_VOLD_MAX_PARTITIONS :=30
 TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
-TARGET_USE_CUSTOM_LUN_FILE_PATH := "/sys/devices/platform/msm_hsusb/gadget/lun%d/file"
-BOARD_UMS_LUNFILE := "/sys/devices/platform/msm_hsusb/gadget/lun0/file"
+TARGET_USE_CUSTOM_LUN_FILE_PATH := "/sys/class/android_usb/android0/f_mass_storage/lun%d/file"
+BOARD_UMS_LUNFILE := "/sys/class/android_usb/android0/f_mass_storage/lun%d/file"
 
 TARGET_RECOVERY_GUI := true
 DEVICE_RESOLUTION := 480x800
@@ -183,6 +166,10 @@ SP1_NAME := "cust"
 SP1_DISPLAY_NAME := "cust"
 SP1_BACKUP_METHOD := image
 SP1_MOUNTABLE := 1
-SP2_NAME := "misc"
-SP2_BACKUP_METHOD := image
+SP2_NAME := "sdcard"
+SP2_BACKUP_METHOD := files
 SP2_MOUNTABLE := 1
+#SP3_NAME := "aboot"
+#SP3_DISPLAY_NAME := "Appsboot"
+#SP3_BACKUP_METHOD := image
+#SP3_MOUNTABLE := 1

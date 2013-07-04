@@ -16,7 +16,6 @@ PRODUCT_MANUFACTURER := HUAWEI
 PRODUCT_BRAND := Ascend
 PRODUCT_MODEL := G300
 PRODUCT_BOARD := U8815
-#PRODUCT_CHARACTERISTICS :=nosdcard
 DEVICE_PACKAGE_OVERLAYS := device/huawei/G300/overlay
 PRODUCT_TAGS += dalvik.gc.type-precise
 PRODUCT_PROPERTY_OVERRIDES+= dalvik.vm.execution-mode=int:jit \
@@ -24,12 +23,12 @@ PRODUCT_PROPERTY_OVERRIDES+= dalvik.vm.execution-mode=int:jit \
 	ro.telephony.call_ring.delay=5000 \
 	dalvik.vm.dexopt-flags=m=y \
 	ro.com.google.locationfeatures=1 \
-	ro.config.vc_call_vol_steps=7 \
 
-	
+
 
 PRODUCT_AAPT_CONFIG := normal hdpi
 PRODUCT_AAPT_PREF_CONFIG := hdpi
+
 
 
 PRODUCT_PACKAGES += audio.primary.msm7x27a
@@ -37,7 +36,7 @@ PRODUCT_PACKAGES += audio_policy.msm7x27a
 PRODUCT_PACKAGES += audio_policy.conf
 PRODUCT_PACKAGES += copybit.msm7x27a
 PRODUCT_PACKAGES += gralloc.msm7x27a
-PRODUCT_PACKAGES += lights.msm7x27a
+#PRODUCT_PACKAGES += lights.msm7x27a
 PRODUCT_PACKAGES += hwcomposer.msm7x27a
 PRODUCT_PACKAGES += libmemalloc
 PRODUCT_PACKAGES += libstagefrighthw
@@ -74,8 +73,8 @@ PRODUCT_PACKAGES += mm-video-encdrv-test
 
 PRODUCT_PACKAGES += libv8
 
-# Sensors
-#PRODUCT_PACKAGES += libinvensense_hal
+# FM
+#PRODUCT_PACKAGES += FmRadioReceiver \
 
 
 
@@ -172,6 +171,7 @@ PRODUCT_COPY_FILES += \
     packages/wallpapers/LivePicker/android.software.live_wallpaper.xml:system/etc/permissions/android.software.live_wallpaper.xml \
 	frameworks/native/data/etc/android.hardware.sensor.proximity.xml:system/etc/permissions/android.hardware.sensor.proximity.xml \
 	device/huawei/G300/proprietary/etc/permissions/com.google.widevine.software.drm.xml:system/etc/permissions/com.google.widevine.software.drm.xml \
+	frameworks/native/data/etc/android.hardware.wifi.direct.xml:system/etc/permissions/android.hardware.wifi.direct.xml \
 
 #recovery root dir
 PRODUCT_COPY_FILES += \
@@ -190,49 +190,16 @@ PRODUCT_COPY_FILES += \
 	device/huawei/G300/proprietary/root/sbin/resize2fs_s:root/sbin/resize2fs_s \
 	device/huawei/G300/proprietary/root/init.rc:root/init.rc \
 	device/huawei/G300/proprietary/root/ueventd.rc:root/ueventd.rc \
-	device/huawei/G300/proprietary/root/init:root/init \
 	device/huawei/G300/proprietary/root/sbin/e2fsck_s:root/sbin/e2fsck_s \
-	device/huawei/G300/proprietary/root/init.usb.rc:root/init.usb.rc \
+	device/huawei/G300/proprietary/root/init.usb.rc:root/init.qcom.usb.rc \
 
 # VOLD files
 PRODUCT_COPY_FILES += \
 	device/huawei/G300/proprietary/etc/vold.fstab:system/etc/vold.fstab \
 	device/huawei/G300/recovery.fstab:recovery/root/etc/recovery.fstab \
-	device/huawei/G300/proprietary/cdrom/autorun.iso:system/cdrom/autorun.iso \
 	device/huawei/G300/proprietary/bin/hw_scsi_switch:system/bin/hw_scsi_switch \
 	
 
-
-# kcm keymaps
-PRODUCT_COPY_FILES += \
-    device/huawei/G300/proprietary/usr/keychars/Generic.kcm:system/usr/keychars/Generic.kcm \
-    device/huawei/G300/proprietary/usr/keychars/qwerty2.kcm:system/usr/keychars/qwerty2.kcm \
-    device/huawei/G300/proprietary/usr/keychars/qwerty.kcm:system/usr/keychars/qwerty.kcm \
-    device/huawei/G300/proprietary/usr/keychars/Virtual.kcm:system/usr/keychars/Virtual.kcm \
-    device/huawei/G300/proprietary/usr/keychars/7x27a_kp.kcm:system/usr/keychars/7x27a_kp.kcm \
-
-# kl keylayouts
-PRODUCT_COPY_FILES += \
-    device/huawei/G300/proprietary/usr/keylayout/7k_handset.kl:system/usr/keylayout/7k_handset.kl \
-	device/huawei/G300/proprietary/usr/keylayout/7x27a_kp.kl:system/usr/keylayout/7x27a_kp.kl \
-	device/huawei/G300/proprietary/usr/keylayout/AVRCP.kl:system/usr/keylayout/AVRCP.kl \
-    device/huawei/G300/proprietary/usr/keylayout/Generic.kl:system/usr/keylayout/Generic.kl \
-    device/huawei/G300/proprietary/usr/keylayout/qwerty.kl:system/usr/keylayout/qwerty.kl \
-    device/huawei/G300/proprietary/usr/keylayout/surf_keypad.kl:system/usr/keylayout/surf_keypad.kl \
-    device/huawei/G300/proprietary/usr/keylayout/Vendor_045e_Product_028e.kl:system/usr/keylayout/Vendor_045e_Product_028e.kl \
-    device/huawei/G300/proprietary/usr/keylayout/Vendor_046d_Product_c216.kl:system/usr/keylayout/Vendor_046d_Product_c216.kl \
-    device/huawei/G300/proprietary/usr/keylayout/Vendor_046d_Product_c294.kl:system/usr/keylayout/Vendor_046d_Product_c294.kl \
-    device/huawei/G300/proprietary/usr/keylayout/Vendor_046d_Product_c299.kl:system/usr/keylayout/Vendor_046d_Product_c299.kl \
-    device/huawei/G300/proprietary/usr/keylayout/Vendor_046d_Product_c532.kl:system/usr/keylayout/Vendor_046d_Product_c532.kl \
-    device/huawei/G300/proprietary/usr/keylayout/Vendor_054c_Product_0268.kl:system/usr/keylayout/Vendor_054c_Product_0268.kl \
-    device/huawei/G300/proprietary/usr/keylayout/Vendor_05ac_Product_0239.kl:system/usr/keylayout/Vendor_05ac_Product_0239.kl \
-    device/huawei/G300/proprietary/usr/keylayout/Vendor_22b8_Product_093d.kl:system/usr/keylayout/Vendor_22b8_Product_093d.kl \
-
-# idc files
-PRODUCT_COPY_FILES += \
-    device/huawei/G300/proprietary/usr/idc/qwerty2.idc:system/usr/idc/qwerty2.idc \
-    device/huawei/G300/proprietary/usr/idc/qwerty.idc:system/usr/idc/qwerty.idc \
-	device/huawei/G300/proprietary/usr/icu/icudt46l.dat:system/usr/icu/icudt46l.dat \
 
 #adreno200 	
 PRODUCT_COPY_FILES += \
@@ -260,35 +227,49 @@ PRODUCT_COPY_FILES += \
 	device/huawei/G300/proprietary/etc/media_profiles.xml:system/etc/media_profiles.xml \
 	device/huawei/G300/proprietary/etc/AudioFilter_MSM7227A_U8815.csv:system/etc/AudioFilter.csv \
 	device/huawei/G300/proprietary/etc/media_codecs.xml:system/etc/media_codecs.xml \
-	device/huawei/G300/proprietary/etc/audio_effects.conf:system/etc/audio_effects.conf \
+	device/huawei/G300/proprietary/etc/AutoVolumeControl.txt:system/etc/AutoVolumeControl.txt \
 
 #Audio	
 PRODUCT_COPY_FILES += \
 	device/huawei/G300/proprietary/lib/libaudioalsa.so:system/lib/libaudioalsa.so \
+	device/huawei/G300/proprietary/lib/libaudioalsa.so:obj/lib/libaudioalsa.so \
+	device/huawei/G300/proprietary/lib/liballjoyn.so:system/lib/liballjoyn.so \
 	device/huawei/G300/proprietary/lib/libaudioeq.so:system/lib/libaudioeq.so \
 
+	
 
 #Wifi	
 PRODUCT_COPY_FILES += \
 	device/huawei/G300/proprietary/wifi/nvram_4330.txt:system/wifi/nvram_4330.txt \
-	device/huawei/G300/proprietary/wifi/fw_4330_b2.bin:system/wifi/fw_4330_b2.bin \
 	device/huawei/G300/proprietary/etc/wifi/wpa_supplicant.conf:system/etc/wifi/wpa_supplicant.conf \
-	#device/huawei/G300/proprietary/etc/wifi/p2p_supplicant.conf:system/etc/wifi/p2p_supplicant.conf \
+	device/huawei/G300/proprietary/wifi/fw_4330_b2.bin:system/wifi/fw_4330_b2.bin \
+	device/huawei/G300/proprietary/wifi/fw_4330_b2.bin:system/wifi/fw_4330_b2_apsta.bin \
+	device/huawei/G300/proprietary/wifi/fw_4330_b2.bin:system/wifi/fw_4330_b2_p2p.bin \
+	device/huawei/G300/proprietary/etc/wifi/p2p_supplicant.conf:system/etc/wifi/p2p_supplicant.conf \
+	device/huawei/G300/proprietary/etc/dhcpcd/dhcpcd.conf:system/etc/dhcpcd/dhcpcd.conf \
 
+	
+	
 #$(call inherit-product-if-exists, hardware/broadcom/wlan/bcmdhd/firmware/bcm4330/device-bcm.mk)
 
 	
 #Sensors & others	
 PRODUCT_COPY_FILES += \
-	device/huawei/G300/proprietary/lib/hw/lights.msm7627a.so:system/lib/hw/lights.msm7x27a.so \
-	device/huawei/G300/proprietary/lib/hw/lights.msm7627a.so:obj/lib/hw/lights.msm7x27a.so \
-	device/huawei/G300/proprietary/lib/hw/libbcmfm_if.so:system/lib/hw/libbcmfm_if.so \
-	device/huawei/G300/proprietary/lib/hw/nfc.huawei.so:system/lib/hw/nfc.msm7x27a.so \
+	device/huawei/G300/proprietary/lib/hw/lights.msm7x27a.so:system/lib/hw/lights.msm7x27a.so \
+	device/huawei/G300/proprietary/lib/hw/lights.msm7x27a.so:obj/lib/hw/lights.msm7x27a.so \
+	device/huawei/G300/proprietary/lib/hw/nfc.huawei.so:system/lib/hw/nfc.huawei.so \
 	device/huawei/G300/proprietary/lib/hw/sensors.default.so:system/lib/hw/sensors.default.so \
 	device/huawei/G300/proprietary/lib/liboeminfo.so:system/lib/liboeminfo.so \
     device/huawei/G300/proprietary/lib/liboeminfodata.so:system/lib/liboeminfodata.so \
     device/huawei/G300/proprietary/lib/liboem_rapi.so:system/lib/liboem_rapi.so \
     device/huawei/G300/proprietary/lib/libqc-opt.so:system/lib/libqc-opt.so \
+    device/huawei/G300/proprietary/lib/libxml.so:system/lib/libxml.so \
+    device/huawei/G300/proprietary/lib/libdnshostprio.so:system/lib/libdnshostprio.so \
+    device/huawei/G300/proprietary/lib/libtcpfinaggr.so:system/lib/libtcpfinaggr.so \
+    device/huawei/G300/proprietary/lib/pp_proc_plugin.so:system/lib/pp_proc_plugin.so \
+    device/huawei/G300/proprietary/lib/qnet-plugin.so:system/lib/qnet-plugin.so \
+    device/huawei/G300/proprietary/lib/tcp-connections.so:system/lib/tcp-connections.so \
+    device/huawei/G300/proprietary/lib/libhwnv.so:system/lib/libhwnv.so \
 	device/huawei/G300/proprietary/bin/akmd8962:system/bin/akmd8962 \
 	device/huawei/G300/proprietary/bin/akmd8975:system/bin/akmd8975 \
 	device/huawei/G300/proprietary/bin/rmt_storage:system/bin/rmt_storage \
@@ -325,6 +306,7 @@ PRODUCT_COPY_FILES += \
 	device/huawei/G300/proprietary/lib/libwms.so:system/lib/libwms.so \
 	device/huawei/G300/proprietary/lib/libwmsts.so:system/lib/libwmsts.so \
 	device/huawei/G300/proprietary/lib/libhwrpc.so:system/lib/libhwrpc.so \
+	device/huawei/G300/proprietary/lib/libhwrpc.so:obj/lib/libhwrpc.so \
 	device/huawei/G300/proprietary/lib/libqmi.so:system/lib/libqmi.so \
 	device/huawei/G300/proprietary/lib/libdsutils.so:system/lib/libdsutils.so \
 	device/huawei/G300/proprietary/lib/libqmiservices.so:system/lib/libqmiservices.so \
@@ -333,18 +315,23 @@ PRODUCT_COPY_FILES += \
 	device/huawei/G300/proprietary/lib/libqdi.so:system/lib/libqdi.so \
 	device/huawei/G300/proprietary/lib/libnetmgr.so:system/lib/libnetmgr.so \
 	device/huawei/G300/proprietary/lib/libqdp.so:system/lib/libqdp.so \
+	device/huawei/G300/proprietary/lib/libcneapiclient.so:system/lib/libcneapiclient.so \
+	device/huawei/G300/proprietary/lib/libcneqmiutils.so:system/lib/libcneqmiutils.so \
+	device/huawei/G300/proprietary/lib/libcneutils.so:system/lib/libcneutils.so \
+	device/huawei/G300/proprietary/bin/cnd:system/bin/cnd \
 	device/huawei/G300/proprietary/bin/netmgrd:system/bin/netmgrd \
-   device/huawei/G300/proprietary/lib/libril.so:system/lib/libril.so \
-   device/huawei/G300/proprietary/lib/libril.so:obj/lib/libril.so \
    device/huawei/G300/proprietary/bin/modempre:system/bin/modempre \
    device/huawei/G300/proprietary/bin/qmiproxy:system/bin/qmiproxy \
    device/huawei/G300/proprietary/bin/qmuxd:system/bin/qmuxd \
    device/huawei/G300/proprietary/bin/bridgemgrd:system/bin/bridgemgrd \
    device/huawei/G300/proprietary/bin/modempre:system/bin/modempre \
+   device/huawei/G300/proprietary/bin/ATFWD-daemon:system/bin/ATFWD-daemon \
    device/huawei/G300/proprietary/bin/rild:system/bin/rild \
 	device/huawei/G300/proprietary/bin/rild:obj/bin/rild \
 	device/huawei/G300/proprietary/lib/libreference-ril.so:system/lib/libreference-ril.so \
 	device/huawei/G300/proprietary/lib/libreference-ril.so:obj/lib/libreference-ril.so \
+   device/huawei/G300/proprietary/lib/libril.so:obj/lib/libril.so \
+   device/huawei/G300/proprietary/lib/libril.so:system/lib/libril.so \
 
 	
 #codecs	
@@ -413,6 +400,11 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
 	device/huawei/G300/proprietary/bin/brcm_patchram_plus:system/bin/brcm_patchram_plus \
 	device/huawei/G300/proprietary/bin/btld:system/bin/btld \
+	device/huawei/G300/proprietary/bin/btnvtool:system/bin/btnvtool \
+	device/huawei/G300/proprietary/bin/amploader:system/bin/amploader \
+	device/huawei/G300/proprietary/bin/dun-server:system/bin/dun-server \
+	device/huawei/G300/proprietary/bin/sapd:system/bin/sapd \
+	device/huawei/G300/proprietary/bin/sdptool:system/bin/sdptool \
 	device/huawei/G300/proprietary/bin/hci_qcomm_init:system/bin/hci_qcomm_init \
 	device/huawei/G300/proprietary/etc/bluetooth/BCM4330.hcd:system/etc/bluetooth/BCM4330.hcd \
 	device/huawei/G300/proprietary/etc/bluetooth/input.conf:system/etc/bluetooth/input.conf \
@@ -420,3 +412,7 @@ PRODUCT_COPY_FILES += \
 	device/huawei/G300/proprietary/etc/bluetooth/network.conf:system/etc/bluetooth/network.conf \
 	device/huawei/G300/proprietary/etc/bluetooth/init.bcm.bt.sh:system/etc/bluetooth/init.bcm.bt.sh \
 
+# Ringtones
+PRODUCT_COPY_FILES += \
+	device/huawei/G300/proprietary/TheLastMalev.ogg:system/media/audio/ringtones/TheLastMalev.ogg \
+	
